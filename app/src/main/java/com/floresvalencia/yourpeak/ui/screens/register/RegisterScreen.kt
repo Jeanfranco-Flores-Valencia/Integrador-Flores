@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
@@ -81,17 +82,17 @@ private fun RegisterContent(
     AuthScaffold(
         top = {
             PeakLogo()
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(12.dp))
             HeaderTitle("Encuentra\nYour Peak")
         },
-        bottom = {
-            AuthCard {
+        bottom = { minCardHeight ->
+            AuthCard(modifier = Modifier.heightIn(min = minCardHeight)) {
                 Text(
                     text = "Registrate para usar la app",
                     style = MaterialTheme.typography.titleMedium,
                     color = TextPrimary
                 )
-                Spacer(Modifier.height(18.dp))
+                Spacer(Modifier.height(20.dp))
                 PeakTextField(
                     value = state.fullName,
                     onValueChange = onNameChange,
@@ -99,7 +100,7 @@ private fun RegisterContent(
                     leadingIcon = Icons.Outlined.Person,
                     isError = state.nameError
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(16.dp))
                 PeakTextField(
                     value = state.email,
                     onValueChange = onEmailChange,
@@ -108,7 +109,7 @@ private fun RegisterContent(
                     keyboardType = KeyboardType.Email,
                     isError = state.emailError
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(16.dp))
                 PeakTextField(
                     value = state.password,
                     onValueChange = onPasswordChange,
@@ -117,7 +118,7 @@ private fun RegisterContent(
                     isPassword = true,
                     isError = state.passwordError
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(16.dp))
                 PeakTextField(
                     value = state.confirmPassword,
                     onValueChange = onConfirmChange,
@@ -131,7 +132,7 @@ private fun RegisterContent(
                         onRegisterClick()
                     }
                 )
-                Spacer(Modifier.height(18.dp))
+                Spacer(Modifier.height(22.dp))
                 PeakButton(
                     text = "Registrate",
                     onClick = {
@@ -141,15 +142,15 @@ private fun RegisterContent(
                     isLoading = state.isLoading,
                     modifier = Modifier.fillMaxWidth(0.78f)
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(18.dp))
                 FooterLink(
                     prefix = "Yo tengo una cuenta  ",
                     action = "INICIAR SESION",
                     onClick = onLoginClick
                 )
-                Spacer(Modifier.height(14.dp))
-                PageIndicator(selected = 2)
             }
+            Spacer(Modifier.height(14.dp))
+            PageIndicator(selected = 2)
         }
     )
 }

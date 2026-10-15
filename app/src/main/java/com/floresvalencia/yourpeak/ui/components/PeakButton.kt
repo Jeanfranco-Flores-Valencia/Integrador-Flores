@@ -36,18 +36,18 @@ fun PeakButton(
         border = BorderStroke(2.dp, PeakRedDark),
         colors = ButtonDefaults.buttonColors(
             containerColor = PeakRed,
-            contentColor = Color.White,
+            contentColor = Color.Black,
             disabledContainerColor = PeakRed.copy(alpha = 0.7f),
-            disabledContentColor = Color.White
+            disabledContentColor = Color.Black
         ),
-        contentPadding = PaddingValues(horizontal = 28.dp, vertical = 0.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
         modifier = modifier
             .height(44.dp)
             .shadow(8.dp, shape, ambientColor = PeakRed, spotColor = PeakRed)
     ) {
         if (isLoading) {
             CircularProgressIndicator(
-                color = Color.White,
+                color = Color.Black,
                 strokeWidth = 2.dp,
                 modifier = Modifier.size(20.dp)
             )
@@ -56,7 +56,8 @@ fun PeakButton(
                 text = text.uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
+                letterSpacing = 1.sp,
+                maxLines = 1
             )
         }
     }

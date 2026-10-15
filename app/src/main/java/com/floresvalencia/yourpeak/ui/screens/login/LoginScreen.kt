@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
@@ -85,11 +86,11 @@ private fun LoginContent(
     AuthScaffold(
         top = {
             PeakLogo()
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(12.dp))
             HeaderTitle("Busca\nYour Peak")
         },
-        bottom = {
-            AuthCard {
+        bottom = { minCardHeight ->
+            AuthCard(modifier = Modifier.heightIn(min = minCardHeight)) {
                 Text(
                     text = "Inicia sesión en tu cuenta",
                     style = MaterialTheme.typography.titleMedium,
@@ -104,7 +105,7 @@ private fun LoginContent(
                     keyboardType = KeyboardType.Email,
                     isError = state.emailError
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(16.dp))
                 PeakTextField(
                     value = state.password,
                     onValueChange = onPasswordChange,
@@ -127,7 +128,7 @@ private fun LoginContent(
                         .clickable(onClick = onForgotClick)
                         .padding(4.dp)
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(20.dp))
                 PeakButton(
                     text = "Iniciar sesion",
                     onClick = {
@@ -137,17 +138,17 @@ private fun LoginContent(
                     isLoading = state.isLoading,
                     modifier = Modifier.fillMaxWidth(0.78f)
                 )
-                Spacer(Modifier.height(18.dp))
+                Spacer(Modifier.height(20.dp))
                 SocialDivider(onGoogleClick = onGoogleClick)
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(18.dp))
                 FooterLink(
                     prefix = "¿ No tienes una cuenta ?  ",
                     action = "REGISTRATE",
                     onClick = onRegisterClick
                 )
-                Spacer(Modifier.height(14.dp))
-                PageIndicator(selected = 1)
             }
+            Spacer(Modifier.height(14.dp))
+            PageIndicator(selected = 1)
         }
     )
 }

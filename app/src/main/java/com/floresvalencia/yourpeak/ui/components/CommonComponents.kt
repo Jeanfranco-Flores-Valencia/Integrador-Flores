@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -28,11 +31,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -58,7 +67,7 @@ import com.floresvalencia.yourpeak.ui.theme.TextSecondary
 @Composable
 fun AuthScaffold(
     top: @Composable ColumnScope.() -> Unit,
-    bottom: @Composable ColumnScope.() -> Unit
+    bottom: @Composable ColumnScope.(cardMinHeight: Dp) -> Unit
 ) {
     PeakBackground {
         BoxWithConstraints(
@@ -67,23 +76,37 @@ fun AuthScaffold(
                 .systemBarsPadding()
                 .imePadding()
         ) {
+            val density = LocalDensity.current
+            var topHeightPx by remember { mutableIntStateOf(0) }
+            val topHeightDp = with(density) { topHeightPx.toDp() }
+            val spacingDp = 16.dp
+            val verticalPaddingDp = 32.dp // 16.dp top + 16.dp bottom
+            val pageIndicatorSpace = 32.dp // spacer + indicator
+            val minCardHeight = (maxHeight - topHeightDp - spacingDp - verticalPaddingDp - pageIndicatorSpace).coerceAtLeast(0.dp)
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                     .heightIn(min = maxHeight)
                     .padding(horizontal = 18.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(Modifier.fillMaxWidth(), content = top)
-                Column(Modifier.fillMaxWidth().padding(top = 24.dp), content = bottom)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { topHeightPx = it.size.height },
+                    content = top
+                )
+                Spacer(Modifier.height(spacingDp))
+                bottom(minCardHeight)
             }
         }
     }
 }
 
 @Composable
-fun PeakLogo(modifier: Modifier = Modifier, size: Dp = 40.dp) {
+fun PeakLogo(modifier: Modifier = Modifier, size: Dp = 48.dp) {
     Icon(
         painter = painterResource(R.drawable.ic_logo),
         contentDescription = "Logo Your Peak",
@@ -111,9 +134,9 @@ fun AuthCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(PeakCard)
-            .padding(horizontal = 18.dp, vertical = 20.dp),
+            .padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = content
     )
@@ -123,7 +146,7 @@ fun AuthCard(
 fun CardMessage(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.bodyMedium,
         color = PeakRed,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(horizontal = 12.dp)
@@ -132,11 +155,11 @@ fun CardMessage(text: String) {
 
 @Composable
 fun PageIndicator(selected: Int, modifier: Modifier = Modifier, count: Int = 3) {
-    Row(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+    Row(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         repeat(count) { index ->
             Box(
                 Modifier
-                    .size(6.dp)
+                    .size(7.dp)
                     .clip(CircleShape)
                     .background(if (index == selected) PeakRed else DotInactive)
             )
@@ -171,7 +194,7 @@ fun SocialDivider(onGoogleClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .padding(horizontal = 14.dp)
-                .size(26.dp)
+                .size(30.dp)
                 .clip(CircleShape)
                 .background(PeakRed.copy(alpha = 0.15f))
                 .clickable(onClick = onGoogleClick),
@@ -181,7 +204,7 @@ fun SocialDivider(onGoogleClick: () -> Unit) {
                 text = "G",
                 color = PeakRed,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleMedium
             )
         }
         HorizontalDivider(Modifier.weight(1f), thickness = 2.dp, color = TextSecondary.copy(alpha = 0.5f))
@@ -195,7 +218,7 @@ fun BackButton(onClick: () -> Unit) {
             imageVector = Icons.Filled.ArrowBackIosNew,
             contentDescription = "Atrás",
             tint = TextPrimary,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(24.dp)
         )
     }
 }
@@ -206,17 +229,27 @@ fun GlowIcon(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Box(modifier.size(220.dp), contentAlignment = Alignment.Center) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(PeakRed.copy(alpha = 0.35f), Color.Transparent),
-                    radius = size.minDimension / 2
-                )
-            )
-            drawCircle(color = PeakBackground, radius = size.minDimension * 0.33f)
-            drawCircle(color = Color.White.copy(alpha = 0.03f), radius = size.minDimension * 0.33f)
+    BoxWithConstraints(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        val computedSize = if (maxHeight != Dp.Unspecified && maxHeight != Dp.Infinity && maxHeight > 0.dp) {
+            (maxHeight * 0.45f).coerceIn(180.dp, 240.dp)
+        } else {
+            220.dp
         }
-        content()
+        Box(Modifier.size(computedSize), contentAlignment = Alignment.Center) {
+            Canvas(Modifier.fillMaxSize()) {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(PeakRed.copy(alpha = 0.35f), Color.Transparent),
+                        radius = size.minDimension / 2
+                    )
+                )
+                drawCircle(color = PeakBackground, radius = size.minDimension * 0.33f)
+                drawCircle(color = Color.White.copy(alpha = 0.03f), radius = size.minDimension * 0.33f)
+            }
+            content()
+        }
     }
 }

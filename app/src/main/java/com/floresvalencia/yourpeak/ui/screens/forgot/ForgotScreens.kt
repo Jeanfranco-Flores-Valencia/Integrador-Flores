@@ -4,10 +4,12 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +33,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.floresvalencia.yourpeak.ui.components.AuthCard
 import com.floresvalencia.yourpeak.ui.components.AuthScaffold
@@ -73,17 +76,16 @@ private fun ForgotEffects(
 private fun ForgotLayout(
     onBack: () -> Unit,
     icon: @Composable () -> Unit,
-    card: @Composable () -> Unit
+    card: @Composable ColumnScope.(minCardHeight: Dp) -> Unit
 ) {
     AuthScaffold(
         top = {
             BackButton(onClick = onBack)
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(8.dp))
             GlowIcon(Modifier.align(Alignment.CenterHorizontally)) { icon() }
         },
-        bottom = {
-            card()
-            Spacer(Modifier.height(24.dp))
+        bottom = { minCardHeight ->
+            card(minCardHeight)
         }
     )
 }
@@ -112,13 +114,13 @@ private fun ForgotEmailContent(
     ForgotLayout(
         onBack = onBack,
         icon = { BigIcon { Icon(Icons.Filled.Lock, null, tint = PeakRed, modifier = Modifier.fillMaxSize()) } }
-    ) {
-        AuthCard {
+    ) { minCardHeight ->
+        AuthCard(modifier = Modifier.heightIn(min = minCardHeight)) {
             Spacer(Modifier.height(8.dp))
             CardMessage(
                 "Por favor, introduzca su dirección de correo electrónico para recibir un código de verificación."
             )
-            Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(24.dp))
             PeakTextField(
                 value = state.email,
                 onValueChange = onEmailChange,
@@ -129,16 +131,16 @@ private fun ForgotEmailContent(
                 isError = state.emailError,
                 onImeAction = { focus.clearFocus(); onSend() }
             )
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(24.dp))
             PeakButton(
                 text = "Enviar",
                 onClick = { focus.clearFocus(); onSend() },
                 isLoading = state.isLoading,
-                modifier = Modifier.fillMaxWidth(0.42f)
+                modifier = Modifier.fillMaxWidth(0.68f)
             )
-            Spacer(Modifier.height(20.dp))
-            PageIndicator(selected = 0)
         }
+        Spacer(Modifier.height(14.dp))
+        PageIndicator(selected = 0)
     }
 }
 
@@ -167,8 +169,8 @@ private fun VerifyCodeContent(
     ForgotLayout(
         onBack = onBack,
         icon = { BigIcon { Icon(Icons.Filled.Drafts, null, tint = PeakRed, modifier = Modifier.fillMaxSize()) } }
-    ) {
-        AuthCard {
+    ) { minCardHeight ->
+        AuthCard(modifier = Modifier.heightIn(min = minCardHeight)) {
             Spacer(Modifier.height(8.dp))
             CardMessage(
                 "Ingrese el código de verificación que se acaba de enviar a su dirección de correo electrónico."
@@ -184,7 +186,7 @@ private fun VerifyCodeContent(
                 isError = state.codeError,
                 onImeAction = { focus.clearFocus(); onVerify() }
             )
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(12.dp))
             Text(
                 text = "Reenviar código",
                 style = MaterialTheme.typography.labelSmall,
@@ -193,16 +195,16 @@ private fun VerifyCodeContent(
                     .clickable(onClick = onResend)
                     .padding(4.dp)
             )
-            Spacer(Modifier.height(22.dp))
+            Spacer(Modifier.height(20.dp))
             PeakButton(
                 text = "Verificar",
                 onClick = { focus.clearFocus(); onVerify() },
                 isLoading = state.isLoading,
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.fillMaxWidth(0.68f)
             )
-            Spacer(Modifier.height(20.dp))
-            PageIndicator(selected = 1)
         }
+        Spacer(Modifier.height(14.dp))
+        PageIndicator(selected = 1)
     }
 }
 
@@ -230,8 +232,8 @@ private fun NewPasswordContent(
     onBack: () -> Unit
 ) {
     val focus = LocalFocusManager.current
-    ForgotLayout(onBack = onBack, icon = { LockCheckIcon() }) {
-        AuthCard {
+    ForgotLayout(onBack = onBack, icon = { LockCheckIcon() }) { minCardHeight ->
+        AuthCard(modifier = Modifier.heightIn(min = minCardHeight)) {
             Spacer(Modifier.height(8.dp))
             CardMessage("Tu nueva contraseña debe ser diferente de tu contraseña anterior.")
             Spacer(Modifier.height(24.dp))
@@ -243,7 +245,7 @@ private fun NewPasswordContent(
                 isPassword = true,
                 isError = state.passwordError
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
             PeakTextField(
                 value = state.confirmPassword,
                 onValueChange = onConfirmChange,
@@ -254,16 +256,16 @@ private fun NewPasswordContent(
                 imeAction = ImeAction.Done,
                 onImeAction = { focus.clearFocus(); onSave() }
             )
-            Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(24.dp))
             PeakButton(
                 text = "Guardar",
                 onClick = { focus.clearFocus(); onSave() },
                 isLoading = state.isLoading,
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.fillMaxWidth(0.68f)
             )
-            Spacer(Modifier.height(20.dp))
-            PageIndicator(selected = 2)
         }
+        Spacer(Modifier.height(14.dp))
+        PageIndicator(selected = 2)
     }
 }
 
@@ -271,25 +273,25 @@ private fun NewPasswordContent(
 
 @Composable
 private fun BigIcon(content: @Composable () -> Unit) {
-    Box(Modifier.size(104.dp)) { content() }
+    Box(Modifier.size(136.dp)) { content() }
 }
 
 /** Candado con insignia de check (pantalla de nueva contraseña). */
 @Composable
 private fun LockCheckIcon() {
-    Box(Modifier.size(104.dp)) {
+    Box(Modifier.size(136.dp)) {
         Icon(Icons.Filled.Lock, null, tint = PeakRed, modifier = Modifier.fillMaxSize())
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .offset(x = 8.dp, y = 2.dp)
-                .size(46.dp)
+                .offset(x = 10.dp, y = 2.dp)
+                .size(54.dp)
                 .background(PeakBackground, CircleShape)
                 .padding(4.dp)
                 .background(PeakRed, CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Check, null, tint = PeakBackground, modifier = Modifier.size(28.dp))
+            Icon(Icons.Filled.Check, null, tint = PeakBackground, modifier = Modifier.size(34.dp))
         }
     }
 }

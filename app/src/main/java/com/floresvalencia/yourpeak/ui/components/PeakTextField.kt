@@ -79,7 +79,7 @@ fun PeakTextField(
         keyboardActions = KeyboardActions(onAny = { onImeAction() }),
         modifier = modifier
             .fillMaxWidth()
-            .height(42.dp),
+            .height(46.dp),
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
@@ -87,16 +87,16 @@ fun PeakTextField(
                     .clip(shape)
                     .background(FieldBackground)
                     .border(1.5.dp, if (isError) PeakRed else Color.Transparent, shape)
-                    .padding(horizontal = 12.dp),
+                    .padding(horizontal = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,
                     tint = FieldIcon,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(22.dp)
                 )
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.width(12.dp))
                 Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) {
                         Text(
@@ -115,7 +115,7 @@ fun PeakTextField(
                         else "Mostrar contraseña",
                         tint = FieldIcon,
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(22.dp)
                             .clickable { passwordVisible = !passwordVisible }
                     )
                 }

@@ -47,6 +47,7 @@ fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PeakLogo(Modifier.align(Alignment.Start))
+            Spacer(Modifier.height(12.dp))
 
             Box(
                 modifier = Modifier
@@ -61,17 +62,17 @@ fun SplashScreen(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.95f)
+                        .fillMaxHeight()
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))
             PeakButton(
                 text = "Iniciar sesion",
                 onClick = onLoginClick,
                 modifier = Modifier.fillMaxWidth(0.88f)
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(8.dp))
             FooterLink(
                 prefix = "¿ No tienes una cuenta ?  ",
                 action = "REGISTRATE",
